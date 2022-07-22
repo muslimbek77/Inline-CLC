@@ -1,11 +1,7 @@
 import datetime
-from uuid import uuid4
-from numpy import tile
-from telegram.utils.helpers import escape_markdown
-from html import escape
 from django.utils import timezone
-from telegram import InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent, ParseMode, Update,InlineKeyboardButton
-from telegram.ext import CallbackContext,ContextTypes
+from telegram import  InlineQueryResultArticle, InputTextMessageContent, ParseMode, Update,InlineKeyboardButton
+from telegram.ext import CallbackContext
 from Post.models import Posts
 from tgbot.handlers.onboarding import static_text
 from tgbot.handlers.utils.info import extract_user_data_from_update
@@ -52,7 +48,7 @@ def inline_query(update: Update,context:CallbackContext) -> None:
     product = Posts.objects.filter(title__icontains=query)
     for i in product:
         results.append(InlineQueryResultArticle(
-            id=str(uuid4()),
+            id=i.pk,
             title=i.title,
             thumb_url=i.image,
             description=i.content,
@@ -62,22 +58,4 @@ def inline_query(update: Update,context:CallbackContext) -> None:
     update.inline_query.answer(results)
     
     
-    
-# def inline_query(update: Update, context: CallbackContext) -> None:
-#   query = update.inline_query.query
-
-#   if query == "":
-#     return
-
-#   results = [
-#     InlineQueryResultArticle(
-#       id=post.id,
-#       title=post.title,
-#       description=post.content,
-#       thumb_url = post.image,
-#       thumb_width = 5,
-#       thumb_height = 5,
-#       input_message_content=InputTextMessageContent(f"message_text{post.content}\n{post.image}", parse_mode=None),
-#     ) for post in Posts.objects.filter(title__icontains=query)]
-    
-#   update.inline_query.answer(results)
+   
